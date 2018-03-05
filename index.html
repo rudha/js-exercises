@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="author" content="Rudha Oliveira">
+	<title>Exercise 01</title>
+	<script src="./js/moment.js"></script>
+	<style type="text/css">
+		body {
+			margin:40px auto;
+			max-width:650px;
+			line-height:1.6;
+			font-size:18px;
+			color:#444;
+			padding:0 10px;
+		}
+		h1,h3{line-height:1.2}
+		p{font-weight:bold}
+	</style>
+</head>
+<body>
+	<h1>Days between 2 dates</h1>
+	<h3>Please input the dates:</h3>
+	<form method="POST">
+		Date 1:
+		<br><input name="date01" id="date01" type="date" min="1970-01-01">
+		<br><br>
+		Date 2:
+		<br><input name="date02" id="date02" type="date" min="1970-01-01">
+		<br><br>
+		<button type="button" onclick="tryDate()">Submit</button>
+	</form>
+	<br>
+	<p id="days"></p>
+	<script>
+		function tryDate() {
+			var d1 = new Date(), d2 = new Date();
+			d1 = document.getElementById("date01").value;
+			d2 = document.getElementById("date02").value;
+			var dn1 = Date.parse(d1);
+			var dn2 = Date.parse(d2);
+			
+			// Check for weekends
+			while (dn1 > dn2) {
+				if (moment(dn1).weekday() == 0 || moment(dn1).weekday() == 6) {
+					d1 = moment(d1).subtract(1, 'days');
+				}
+				dn1 = dn1 - 86400000;
+			}
+
+			while (dn2 > dn1) {
+				if (moment(dn2).weekday() == 0 || moment(dn2).weekday() == 6) {
+					d2 = moment(d2).subtract(1, 'days');
+				}
+				dn2 = dn2 - 86400000;
+			}
+
+			var dn1 = Date.parse(d1);
+			var dn2 = Date.parse(d2);
+			var dms = Math.abs(dn1-dn2);
+			//var dd = dms/86400000;
+			var dd = Math.round(dms/86400000);
+			document.getElementById("days").innerHTML = dd;
+		}
+		//var a = moment().format();
+		//var b = moment(a).weekday();
+		//console.log(b);
+	</script>
+</body>
+</html>
