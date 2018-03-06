@@ -1,60 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="myApp">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="author" content="Rudha Oliveira">
 	<title>Exercise 01</title>
-	<script src="./js/moment.js"></script>
-	<link rel="stylesheet" type="text/css" href="./css/styles.css">
+	<script src="js/moment.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
 </head>
-<body>
-	<h1>Days between 2 dates</h1>
-	<h3>Please input the dates:</h3>
-	<form method="POST">
-		Date 1:
-		<br><input name="date01" id="date01" type="date" min="1970-01-01">
-		<br><br>
-		Date 2:
-		<br><input name="date02" id="date02" type="date" min="1970-01-01">
-		<br><br>
-		<button type="button" onclick="tryDate()">Submit</button>
-	</form>
+<body ng-controller="myCtrl">
+	<h1>Days between 2 dates.</h1>
+	<h2>Please input the dates:</h2>
+	Date 1:
+	<br><input type="date" ng-model="d1" ng-change="tryDate()" min="1970-01-01">
+	<br><br>
+	Date 2:
+	<br><input type="date" ng-model='d2' ng-change="tryDate()" min="1970-01-01">
 	<br>
-	<p id="days"></p>
+	<p>There are {{dd}} weekdays between these dates.</p>
+	
 	<script>
-		function tryDate() {
-			var d1 = new Date(), d2 = new Date();
-			d1 = document.getElementById("date01").value;
-			d2 = document.getElementById("date02").value;
-			var dn1 = Date.parse(d1);
-			var dn2 = Date.parse(d2);
-			
-			// Check for weekends
-			while (dn1 > dn2) {
-				if (moment(dn1).weekday() == 0 || moment(dn1).weekday() == 6) {
-					d1 = moment(d1).subtract(1, 'days');
-				}
-				dn1 = dn1 - 86400000;
-			}
+		var app = angular.module('myApp', []);
+		app.controller('myCtrl', function($scope) {
+			$scope.dd = 0;
+			$scope.tryDate = function() {
+				var dn1 = Date.parse($scope.d1);
+				var dn2 = Date.parse($scope.d2);
 
-			while (dn2 > dn1) {
-				if (moment(dn2).weekday() == 0 || moment(dn2).weekday() == 6) {
-					d2 = moment(d2).subtract(1, 'days');
+				// Check for weekends
+				while (dn1 > dn2) {
+					if (moment(dn1).weekday() == 0 || moment(dn1).weekday() == 6) {
+						$scope.d1 = moment($scope.d1).subtract(1, 'days');
+					}
+					dn1 = dn1 - 86400000;
 				}
-				dn2 = dn2 - 86400000;
-			}
 
-			var dn1 = Date.parse(d1);
-			var dn2 = Date.parse(d2);
-			var dms = Math.abs(dn1-dn2);
-			//var dd = dms/86400000;
-			var dd = Math.round(dms/86400000);
-			document.getElementById("days").innerHTML = dd;
-		}
-		//var a = moment().format();
-		//var b = moment(a).weekday();
-		//console.log(b);
+				while (dn2 > dn1) {
+					if (moment(dn2).weekday() == 0 || moment(dn2).weekday() == 6) {
+						$scope.d2 = moment($scope.d2).subtract(1, 'days');
+					}
+					dn2 = dn2 - 86400000;
+				}
+
+				dn1 = Date.parse($scope.d1);
+				dn2 = Date.parse($scope.d2);
+				var dms = Math.abs(dn1-dn2);
+				if (dms) {$scope.dd = (dms/86400000);}
+				else {$scope.dd = 0;}
+			}
+		});
 	</script>
 </body>
 </html>
